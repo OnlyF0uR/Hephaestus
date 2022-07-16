@@ -18,7 +18,7 @@ func init() {
 }
 
 var base64Cmd = &cobra.Command{
-	Use:   "base64",
+	Use:   "base64 [DATA]",
 	Short: "Convert data to/from base64",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) < 1 {

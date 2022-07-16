@@ -21,7 +21,7 @@ func init() {
 }
 
 var hexCmd = &cobra.Command{
-	Use:   "hex",
+	Use:   "hex [DATA]",
 	Short: "Convert integers and text to/from hexadecimal",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) < 1 {

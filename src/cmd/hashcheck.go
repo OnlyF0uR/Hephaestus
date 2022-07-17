@@ -38,16 +38,14 @@ var hashcheckCmd = &cobra.Command{
 				return numA < numB
 			})
 
-			fmt.Println(utils.Green + "\nMost likely:" + utils.Reset)
+			fmt.Println(utils.Green + "Most likely:" + utils.Reset)
 			fmt.Println(utils.Green + " - " + utils.White + cr.AlgoNames[result[0]] + utils.Reset)
 			fmt.Println(utils.Green + " - " + utils.White + cr.AlgoNames[result[1]] + utils.Reset)
 
-			fmt.Println(utils.Green + "\nLess likely:" + utils.Reset)
+			fmt.Println(utils.Green + "Less likely:" + utils.Reset)
 			for i := 2; i < len(result); i++ {
 				fmt.Println(utils.Green + " - " + utils.White + cr.AlgoNames[result[i]] + utils.Reset)
 			}
-
-			fmt.Println()
 		} else {
 			sort.Slice(result, func(i, j int) bool {
 				numA, _ := strconv.Atoi(result[i])
@@ -59,8 +57,6 @@ var hashcheckCmd = &cobra.Command{
 			for i := 0; i < len(result); i++ {
 				fmt.Println(utils.Green + " - " + utils.White + cr.AlgoNames[result[i]] + utils.Reset)
 			}
-
-			fmt.Println()
 		}
 	},
 }

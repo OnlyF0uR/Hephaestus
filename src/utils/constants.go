@@ -1,6 +1,9 @@
 package utils
 
 const (
+	ApplicationVersion = "0.1.0"
+
+	// Colours
 	Reset  = "\033[0m"
 	Red    = "\033[31m"
 	Green  = "\033[32m"

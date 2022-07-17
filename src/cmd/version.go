@@ -16,6 +16,6 @@ var versionCmd = &cobra.Command{
 	Short: "Show version number",
 	Long:  "Obtain the current version number of the application",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println(utils.Green + "Current version: " + utils.White + "v0.1.0" + utils.Reset)
+		fmt.Println(utils.Green + "Current version: " + utils.White + "v" + utils.ApplicationVersion + utils.Reset)
 	},
 }

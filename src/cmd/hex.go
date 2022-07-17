@@ -10,14 +10,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var DecodeHex bool
-var EnableAsciiHex bool
+var decodeHex bool
+var enableAsciiHex bool
 
 func init() {
 	rootCmd.AddCommand(hexCmd)
 
-	hexCmd.Flags().BoolVarP(&DecodeHex, "decode", "d", false, "Convert from hex.")
-	hexCmd.Flags().BoolVarP(&EnableAsciiHex, "ascii", "a", false, "Enabled ASCII convertion.")
+	hexCmd.Flags().BoolVarP(&decodeHex, "decode", "d", false, "Convert from hex.")
+	hexCmd.Flags().BoolVarP(&enableAsciiHex, "ascii", "a", false, "Enabled ASCII convertion.")
 }
 
 var hexCmd = &cobra.Command{
@@ -32,8 +32,8 @@ var hexCmd = &cobra.Command{
 		input := strings.Join(args, " ")
 
 		// Check if we are decoding
-		if DecodeHex {
-			if EnableAsciiHex {
+		if decodeHex {
+			if enableAsciiHex {
 				res, ex := hex.DecodeString(input)
 				if ex != nil {
 					fmt.Println(utils.Red + "Invalid hex encoded ASCII text was provided." + utils.Reset)
@@ -52,7 +52,7 @@ var hexCmd = &cobra.Command{
 			}
 		} else {
 			// Is ascii enabled
-			if EnableAsciiHex {
+			if enableAsciiHex {
 				hex := hex.EncodeToString([]byte(input))
 				fmt.Println(hex)
 			} else {

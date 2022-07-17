@@ -9,12 +9,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var DecodeBase64 bool
+var decodeBase64 bool
 
 func init() {
 	rootCmd.AddCommand(base64Cmd)
 
-	base64Cmd.Flags().BoolVarP(&DecodeBase64, "decode", "d", false, "Decode base64.")
+	base64Cmd.Flags().BoolVarP(&decodeBase64, "decode", "d", false, "Decode base64.")
 }
 
 var base64Cmd = &cobra.Command{
@@ -28,7 +28,7 @@ var base64Cmd = &cobra.Command{
 
 		input := strings.Join(args, " ")
 
-		if DecodeBase64 {
+		if decodeBase64 {
 			sDec, ex := b64.StdEncoding.DecodeString(input)
 			if ex != nil {
 				fmt.Println(utils.Red + "Could not decode the entered string." + utils.Reset)

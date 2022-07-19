@@ -8,4 +8,6 @@ A useful, extensive and "blazingly fast" utility tool for Cyber Security profess
 - [x] Payload generator for reverse and bind shells
 - [x] Hash identifier
 - [ ] HTTP and Subdomain fuzzer
+- [ ] Multifunctional file analyzer (Includes strings, EXIF data etc.)
 - [ ] Packet (pcap) analyzer
+- [ ] OSINT data harvester

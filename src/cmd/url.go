@@ -20,7 +20,7 @@ func init() {
 var urlCmd = &cobra.Command{
 	Use:   "url [DATA]",
 	Short: "Url encoding/decoding for strings",
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(_ *cobra.Command, args []string) {
 		if len(args) < 1 {
 			fmt.Println(utils.Red + "No arguments were provided." + utils.Reset)
 			return

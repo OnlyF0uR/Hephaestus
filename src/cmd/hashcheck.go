@@ -6,8 +6,8 @@ import (
 	"strconv"
 	"strings"
 
-	cr "github.com/OnlyF0uR/Intrusor/src/crypto"
-	"github.com/OnlyF0uR/Intrusor/src/utils"
+	cr "github.com/OnlyF0uR/Hephaestus/src/crypto"
+	"github.com/OnlyF0uR/Hephaestus/src/utils"
 	"github.com/spf13/cobra"
 )
 

@@ -1,4 +1,4 @@
-module github.com/OnlyF0uR/Intrusor
+module github.com/OnlyF0uR/Hephaestus
 
 go 1.18
 

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/OnlyF0uR/Intrusor/src/utils"
+	"github.com/OnlyF0uR/Hephaestus/src/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -22,7 +22,7 @@ func init() {
 	fuzzCmd.Flags().StringVarP(&baseUrl, "url", "u", "", "The URL to scan.")
 	fuzzCmd.Flags().StringVarP(&wordlist, "wordlist", "w", "", "The word list to use")
 	fuzzCmd.Flags().IntVarP(&threads, "threads", "t", 12, "The amount of threads to use.")
-	fuzzCmd.Flags().StringVarP(&userAgent, "useragent", "a", "intrusor/"+utils.ApplicationVersion, "Set the User-Agent.")
+	fuzzCmd.Flags().StringVarP(&userAgent, "useragent", "a", "hephaestus/"+utils.ApplicationVersion, "Set the User-Agent.")
 
 	fuzzCmd.Flags().IntVar(&timeoutDuration, "timeout", 10000, "The time after which a request is marked timed out. (Miliseconds)")
 	fuzzCmd.Flags().IntVar(&maxConnection, "max-con", 500, "Max amount of concurrent connections.")

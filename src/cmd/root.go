@@ -10,9 +10,9 @@ import (
 var cfgFile string
 
 var rootCmd = &cobra.Command{
-	Use:   "intrusor",
+	Use:   "heph",
 	Short: "Cyber security utility tool",
-	Long:  "Intrusor is an all in one utility tool to enhance the workflow of any cyber security professional.",
+	Long:  "Hephaestus is an all in one utility tool to enhance the workflow of any cyber security professional.",
 }
 
 func Execute() {

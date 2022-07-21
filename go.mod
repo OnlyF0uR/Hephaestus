@@ -1,11 +1,14 @@
 module github.com/OnlyF0uR/Hephaestus
 
+replace github.com/OnlyF0uR/Intrusor => github.com/OnlyF0uR/Hephaestus v0.0.0-20220720150749-4666c4e90efb
+
 go 1.18
 
 require (
 	github.com/charmbracelet/bubbletea v0.21.0
 	github.com/charmbracelet/lipgloss v0.5.0
 	github.com/spf13/cobra v1.5.0
+	gopkg.in/yaml.v3 v3.0.1
 )
 
 require (

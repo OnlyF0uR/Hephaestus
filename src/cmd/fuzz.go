@@ -22,7 +22,7 @@ func init() {
 	fuzzCmd.Flags().StringVarP(&baseUrl, "url", "u", "", "The URL to scan.")
 	fuzzCmd.Flags().StringVarP(&wordlist, "wordlist", "w", "", "The word list to use")
 	fuzzCmd.Flags().IntVarP(&threads, "threads", "t", 12, "The amount of threads to use.")
-	fuzzCmd.Flags().StringVarP(&userAgent, "useragent", "a", "hephaestus/"+utils.ApplicationVersion, "Set the User-Agent.")
+	fuzzCmd.Flags().StringVarP(&userAgent, "useragent", "a", "hephaestus/" + utils.ApplicationVersion, "Set the User-Agent.")
 
 	fuzzCmd.Flags().IntVar(&timeoutDuration, "timeout", 10000, "The time after which a request is marked timed out. (Miliseconds)")
 	fuzzCmd.Flags().IntVar(&maxConnection, "max-con", 500, "Max amount of concurrent connections.")
@@ -44,8 +44,10 @@ var fuzzCmd = &cobra.Command{
 
 		fuzzType := strings.ToLower(args[0])
 		if fuzzType == "http" {
+			fmt.Println("Coming soon.")
 			// ...
 		} else if fuzzType == "subdomain" {
+			fmt.Println("Coming soon.")
 			// ...
 		} else {
 			fmt.Println(utils.Red + "Invalid fuzz type. (Use: http or subdomain)" + utils.Reset)

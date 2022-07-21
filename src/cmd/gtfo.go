@@ -176,7 +176,7 @@ func outputInfo(info []struct {
 	Description string "yaml:\"description\""
 	Code        string "yaml:\"code\""
 }, title string) {
-	fmt.Println(utils.Green + title + ": " + utils.Reset)
+	fmt.Println(utils.Green + title + utils.Reset)
 	if len(info[0].Description) > 0 {
 		fmt.Println(utils.Cyan + "[description]\n" + utils.White + info[0].Description + utils.Reset)
 	}

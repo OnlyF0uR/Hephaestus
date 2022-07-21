@@ -77,11 +77,11 @@ type GTFOData struct {
 }
 
 func init() {
-	rootCmd.AddCommand()
+	rootCmd.AddCommand(gtfoCmd)
 }
 
 var gtfoCmd = &cobra.Command{
-	Use:   "url [BINARY]",
+	Use:   "gtfo [BINARY]",
 	Short: "Access GTFObins",
 	Run: func(_ *cobra.Command, args []string) {
 		if len(args) < 1 {
@@ -91,13 +91,19 @@ var gtfoCmd = &cobra.Command{
 
 		bin := strings.ToLower(args[0])
 
-		res, ex := http.NewRequest(http.MethodGet, "https://raw.githubusercontent.com/GTFOBins/GTFOBins.github.io/master/_gtfobins/arp.m://raw.githubusercontent.com/GTFOBins/GTFOBins.github.io/master/_gtfobins/"+bin+".md", nil)
+		req, ex := http.NewRequest(http.MethodGet, "https://raw.githubusercontent.com/GTFOBins/GTFOBins.github.io/master/_gtfobins/"+bin+".md", nil)
 		if ex != nil {
-			fmt.Println(utils.Red + "Could not make GET-request." + utils.Reset)
+			fmt.Println(utils.Red + "Could not manufacture GET-request." + utils.Reset)
 			return
 		}
 
-		if res.Response.StatusCode != 200 {
+		res, ex := http.DefaultClient.Do(req)
+		if ex != nil {
+			fmt.Println(utils.Red + "Could bot send GET-request." + utils.Reset)
+			return
+		}
+
+		if res.StatusCode != 200 {
 			fmt.Println(utils.Red + "Invalid binary file." + utils.Reset)
 			return
 		}
@@ -108,13 +114,77 @@ var gtfoCmd = &cobra.Command{
 			return
 		}
 
+		s_body := strings.ReplaceAll(string(body[:]), "---", "")
+
 		parsed := GTFOData{}
-		ex = yaml.Unmarshal([]byte(body), &parsed)
+		ex = yaml.Unmarshal([]byte(s_body), &parsed)
 		if ex != nil {
 			fmt.Println(utils.Red + "Could not parse yaml." + utils.Reset)
 			return
 		}
 
-		fmt.Printf("--- t:\n%v\n\n", parsed)
+		// Yeah could, and perhaps should, use reflection here :/
+		if len(parsed.Functions.Shell) > 0 {
+			outputInfo(parsed.Functions.Shell, "Shell")
+		}
+		if len(parsed.Functions.Command) > 0 {
+			outputInfo(parsed.Functions.Command, "Command")
+		}
+		if len(parsed.Functions.ReverseShell) > 0 {
+			outputInfo(parsed.Functions.ReverseShell, "Reverse shell")
+		}
+		if len(parsed.Functions.NonInteractiveReverseShell) > 0 {
+			outputInfo(parsed.Functions.NonInteractiveReverseShell, "Non-interactive reverse shell")
+		}
+		if len(parsed.Functions.BindShell) > 0 {
+			outputInfo(parsed.Functions.BindShell, "Bind shell")
+		}
+		if len(parsed.Functions.NonInteractiveBindShell) > 0 {
+			outputInfo(parsed.Functions.NonInteractiveBindShell, "Non-interactive bind shell")
+		}
+		if len(parsed.Functions.FileUpload) > 0 {
+			outputInfo(parsed.Functions.FileUpload, "File upload")
+		}
+		if len(parsed.Functions.FileDownload) > 0 {
+			outputInfo(parsed.Functions.FileDownload, "File download")
+		}
+		if len(parsed.Functions.FileWrite) > 0 {
+			outputInfo(parsed.Functions.FileWrite, "File write")
+		}
+		if len(parsed.Functions.FileRead) > 0 {
+			outputInfo(parsed.Functions.FileRead, "File read")
+		}
+		if len(parsed.Functions.LibraryLoad) > 0 {
+			outputInfo(parsed.Functions.LibraryLoad, "Library load")
+		}
+		if len(parsed.Functions.Suid) > 0 {
+			outputInfo(parsed.Functions.Suid, "SUID")
+		}
+		if len(parsed.Functions.Sudo) > 0 {
+			outputInfo(parsed.Functions.Sudo, "Sudo")
+		}
+		if len(parsed.Functions.Capabilities) > 0 {
+			outputInfo(parsed.Functions.Capabilities, "Capabilities")
+		}
+		if len(parsed.Functions.LimitedSuid) > 0 {
+			outputInfo(parsed.Functions.LimitedSuid, "Limited SUID")
+		}
 	},
+}
+
+func outputInfo(info []struct {
+	Description string "yaml:\"description\""
+	Code        string "yaml:\"code\""
+}, title string) {
+	fmt.Println(utils.Green + title + ": " + utils.Reset)
+	if len(info[0].Description) > 0 {
+		fmt.Println(utils.Cyan + "[description]\n" + utils.White + info[0].Description + utils.Reset)
+	}
+	if len(info[0].Code) > 0 {
+		if strings.HasSuffix(info[0].Code, "\n") {
+			fmt.Println(utils.Cyan + "[code]\n" + utils.White + info[0].Code + utils.Green + utils.Reset)
+		} else {
+			fmt.Println(utils.Cyan + "[code]\n" + utils.White + info[0].Code + utils.Green + "\n" + utils.Reset)
+		}
+	}
 }

@@ -1,8 +1,11 @@
 package cmd
 
 import (
+	"bufio"
 	"fmt"
 	"strings"
+
+	"os"
 
 	"github.com/OnlyF0uR/Hephaestus/src/utils"
 	"github.com/spf13/cobra"
@@ -22,7 +25,7 @@ func init() {
 	fuzzCmd.Flags().StringVarP(&baseUrl, "url", "u", "", "The URL to scan.")
 	fuzzCmd.Flags().StringVarP(&wordlist, "wordlist", "w", "", "The word list to use")
 	fuzzCmd.Flags().IntVarP(&threads, "threads", "t", 12, "The amount of threads to use.")
-	fuzzCmd.Flags().StringVarP(&userAgent, "useragent", "a", "hephaestus/" + utils.ApplicationVersion, "Set the User-Agent.")
+	fuzzCmd.Flags().StringVarP(&userAgent, "useragent", "a", "hephaestus/"+utils.ApplicationVersion, "Set the User-Agent.")
 
 	fuzzCmd.Flags().IntVar(&timeoutDuration, "timeout", 10000, "The time after which a request is marked timed out. (Miliseconds)")
 	fuzzCmd.Flags().IntVar(&maxConnection, "max-con", 500, "Max amount of concurrent connections.")
@@ -44,13 +47,66 @@ var fuzzCmd = &cobra.Command{
 
 		fuzzType := strings.ToLower(args[0])
 		if fuzzType == "http" {
-			fmt.Println("Coming soon.")
-			// ...
+			if strings.HasSuffix(baseUrl, "/") {
+				scanDirectories(baseUrl)
+			} else {
+				scanDirectories(baseUrl + "/")
+			}
 		} else if fuzzType == "subdomain" {
-			fmt.Println("Coming soon.")
-			// ...
+			if strings.HasPrefix(baseUrl, ".") {
+				scanSubdomains(baseUrl)
+			} else {
+				scanSubdomains("." + baseUrl)
+			}
 		} else {
 			fmt.Println(utils.Red + "Invalid fuzz type. (Use: http or subdomain)" + utils.Reset)
 		}
 	},
+}
+
+func scanDirectories(url string) {
+	f, ex := os.Open(wordlist)
+	if ex != nil {
+		fmt.Println(utils.Red + "Wordlist not found." + utils.Reset)
+		return
+	}
+
+	defer f.Close()
+
+	scnr := bufio.NewScanner(f)
+	for scnr.Scan() {
+		ln := scnr.Text()
+		url = url + ln
+
+		// Scan url
+		// Check for 404 content existance
+	}
+
+	if ex = scnr.Err(); ex != nil {
+		fmt.Println(utils.Red + "Scan failed." + utils.Reset)
+		return
+	}
+}
+
+func scanSubdomains(url string) {
+	f, ex := os.Open(wordlist)
+	if ex != nil {
+		fmt.Println(utils.Red + "Wordlist not found." + utils.Reset)
+		return
+	}
+
+	defer f.Close()
+
+	scnr := bufio.NewScanner(f)
+	for scnr.Scan() {
+		ln := scnr.Text()
+		url = ln + url
+
+		// Scan domain for existance
+	}
+
+	if ex = scnr.Err(); ex != nil {
+		fmt.Println(utils.Red + "Scan failed." + utils.Reset)
+		return
+	}
 }
